@@ -1,40 +1,42 @@
 from tkinter import StringVar
-from tkinter import IntVar
 from tkinter import Frame
 from tkinter import Entry
 from tkinter import Label
 from tkinter import Button
 from tkinter import Radiobutton
-from modelo import Abmc
+from modelo import Modelo
 from tkinter import ttk
-from tktemas import temas
+from clases.tktemas import Temas
 
 
 class Ventanita:
     def __init__(self, window):
         self.root = window
-        self.tit = StringVar()
-        self.des = StringVar()
-        self.a = IntVar()
-        self.opcion = StringVar()
-        self.f = Frame(self.root)
-        self.tree = ttk.Treeview(self.f)
-        self.objeto_base = Abmc()
-        # Frame
         self.root.title("Tarea Poo")
-        self.f.config(width=1020, height=1020)
-        self.f.grid(row=10, column=0, columnspan=4)
+
+        self.var_titulo = StringVar()
+        self.var_descripcion = StringVar()
+        self.opcion = StringVar()
+
+        self.modelo = Modelo()
+
+        # Frame
+        self.frame = Frame(self.root)
+        self.frame.config(width=1020, height=1020)
+        self.frame.grid(row=10, column=0, columnspan=4)
+
+        self.tree = ttk.Treeview(self.frame)
 
         # Etiquetas
-        self.superior = Label(
+        self.lbl_superior = Label(
             self.root, text="Ingrese sus datos", bg="orchid", fg="white", width=40
         )
-        self.titulo = Label(self.root, text="Titulo")
-        self.descripcion = Label(self.root, text="Descripcion")
-        self.registros = Label(
+        self.lbl_titulo = Label(self.root, text="Titulo")
+        self.lbl_descripcion = Label(self.root, text="Descripcion")
+        self.lbl_registros = Label(
             self.root, text="Mostrar registros existentes", bg="grey", width=40
         )
-        self.temas = Label(
+        self.lbl_temas = Label(
             self.root,
             text="Temas",
             bg="black",
@@ -43,32 +45,32 @@ class Ventanita:
             width=40,
         )
 
-        self.superior.grid(
+        self.lbl_superior.grid(
             row=0, column=0, columnspan=4, padx=1, pady=1, sticky="w" + "e"
         )
-        self.titulo.grid(row=1, column=0, sticky="w")
-        self.descripcion.grid(row=2, column=0, sticky="w")
-        self.registros.grid(
+        self.lbl_titulo.grid(row=1, column=0, sticky="w")
+        self.lbl_descripcion.grid(row=2, column=0, sticky="w")
+        self.lbl_registros.grid(
             row=3, column=0, columnspan=4, padx=1, pady=1, sticky="w" + "e"
         )
-        self.temas.grid(
+        self.lbl_temas.grid(
             column=0, row=20, columnspan=4, padx=1, pady=1, sticky="w" + "e"
         )
 
         # Entradas
-        self.Ent1 = Entry(self.root, textvariable=self.tit)
-        self.Ent1.grid(row=1, column=1)
-        self.Ent2 = Entry(self.root, textvariable=self.des)
-        self.Ent2.grid(row=2, column=1)
+        self.ent_titulo = Entry(self.root, textvariable=self.var_titulo)
+        self.ent_titulo.grid(row=1, column=1)
+        self.ent_descripcion = Entry(self.root, textvariable=self.var_descripcion)
+        self.ent_descripcion.grid(row=2, column=1)
 
         # Frame Unidad 4
-        self.frame_rojoizq = Frame(self.root, width="200", height="80", bg="red")
+        self.frame_rojo_izq = Frame(self.root, width="200", height="80", bg="red")
         self.frame_negro = Frame(self.root, width="80", height="80", bg="black")
-        self.frame_rojoder = Frame(self.root, width="200", height="80", bg="red")
+        self.frame_rojo_der = Frame(self.root, width="200", height="80", bg="red")
 
-        self.frame_rojoizq.grid(column=0, row=21)
+        self.frame_rojo_izq.grid(column=0, row=21)
         self.frame_negro.grid(column=1, row=21)
-        self.frame_rojoder.grid(column=2, row=21)
+        self.frame_rojo_der.grid(column=2, row=21)
 
         # Botones
         self.boton_alta = Button(self.root, text="Alta", command=lambda: self.alta())
@@ -84,38 +86,41 @@ class Ventanita:
         )
         self.boton_borrar.grid(row=6, column=2)
 
-        self.boton_tema1 = Radiobutton(
+        self.rb_amarillo = Radiobutton(
             self.frame_negro,
-            text="Tema 1",
+            text="Tema Amarillo",
             variable=self.opcion,
             value="01",
-            fg="red",
+            fg="yellow",
             bg="black",
-            command=lambda: temas.tema1(self, self.root),
+            selectcolor="black",
+            command=lambda: Temas.tema_amarillo(self, self.root),
         )
-        self.boton_tema1.grid(column=2, row=21)
+        self.rb_amarillo.grid(column=2, row=21)
 
-        self.boton_tema2 = Radiobutton(
+        self.rb_blanco = Radiobutton(
             self.frame_negro,
-            text="Tema 2",
+            text="Tema Blanco",
             variable=self.opcion,
             value="02",
-            fg="red",
+            fg="white",
             bg="black",
-            command=lambda: temas.tema2(self, self.root),
+            selectcolor="black",
+            command=lambda: Temas.tema_blanco(self, self.root),
         )
-        self.boton_tema2.grid(column=2, row=22)
+        self.rb_blanco.grid(column=2, row=22)
 
-        self.boton_tema3 = Radiobutton(
+        self.rb_rojo = Radiobutton(
             self.frame_negro,
-            text="Tema 3",
+            text="Tema Rojo",
             variable=self.opcion,
             value="03",
             fg="red",
             bg="black",
-            command=lambda: temas.tema3(self, self.root),
+            selectcolor="black",
+            command=lambda: Temas.tema_rojo(self, self.root),
         )
-        self.boton_tema3.grid(column=2, row=23)
+        self.rb_rojo.grid(column=2, row=23)
 
         # Tree
         self.tree["columns"] = ("col1", "col2", "col3")
@@ -129,22 +134,56 @@ class Ventanita:
         self.tree.heading("col3", text="Mensaje")
         self.tree.grid(row=10, column=0, columnspan=4)
 
-    def alta(
-        self,
-    ):
-        self.objeto_base.alta(self.tit, self.des, self.tree)
+    def alta(self):
+        titulo = self.var_titulo.get()
+        descripcion = self.var_descripcion.get()
 
-    def borrar(
-        self,
-    ):
-        self.objeto_base.baja(self.tree)
+        if not titulo or not descripcion:
+            print("Debe completar todos los datos.")
+        else:
+            self.modelo.alta(titulo, descripcion)
+            self.actualizar()
 
-    def modificar(
-        self,
-    ):
-        self.objeto_base.modificar(self.tit, self.des, self.tree)
+    def borrar(self):
+        focus_item = self.tree.focus()
+        row = self.tree.item(focus_item)
+        delete_id = row["text"]
 
-    def actualizar(
-        self,
-    ):
-        self.objeto_base.actualizar_treeview(self.tree)
+        if not delete_id:
+            print("Debe seleccionar un registro.")
+        else:
+            self.modelo.baja(delete_id)
+            self.actualizar()
+
+    def modificar(self):
+        focus_item = self.tree.focus()
+        row = self.tree.item(focus_item)
+        update_id = row["text"]
+
+        if not update_id:
+            print("Debe seleccionar un registro.")
+        else:
+            titulo = self.var_titulo.get()
+            descripcion = self.var_descripcion.get()
+
+            self.modelo.modificar(update_id, titulo, descripcion)
+            self.actualizar()
+
+    def actualizar(self):
+        records = self.tree.get_children()
+
+        for element in records:
+            self.tree.delete(element)
+
+        datos = self.modelo.get_datos()
+        for dato in datos:
+            self.tree.insert(
+                "",
+                0,
+                text=dato.id,
+                values=(
+                    dato.titulo,
+                    dato.descripcion,
+                    dato
+                ),
+            )

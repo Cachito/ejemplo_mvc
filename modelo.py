@@ -1,9 +1,7 @@
-import sqlite3
 from peewee import *
-import datetime
 
 try:
-    db = SqliteDatabase("nivel_avanzado.db")
+    db = SqliteDatabase("./db/nivel_avanzado.db")
 
     class BaseModel(Model):
         class Meta:
@@ -13,64 +11,37 @@ try:
         titulo = CharField(unique=True)
         descripcion = TextField()
 
-        def __str__(
-            self,
-        ):
+        def __str__(self):
             return "El título es: " + self.titulo
 
     db.connect()
     db.create_tables([Noticia])
 
-except:
-    print("mmmm")
+except Exception as ex:
+    print(f'Excepción: {str(ex)}')
 
+class Modelo:
+    def __init__(self):
+        print("en modelo")
 
-class Abmc:
-    def __init__(
-        self,
-    ):
-        print("en controlador")
+    def get_datos(self):
+        datos = Noticia.select()
+        return datos
 
-    def actualizar_treeview(self, mitreeview):
-        # limpieza de tabla
-        records = mitreeview.get_children()
-        for element in records:
-            mitreeview.delete(element)
-
-        for valor_recuperado in Noticia.select():
-            mitreeview.insert(
-                "",
-                0,
-                text=valor_recuperado.id,
-                values=(
-                    valor_recuperado.titulo,
-                    valor_recuperado.descripcion,
-                    valor_recuperado,
-                ),
-            )
-
-    def alta(self, titulo, descripcion, mitreeview):
-
+    def alta(self, titulo, descripcion):
         noticia = Noticia()
-        noticia.titulo = titulo.get()
-        noticia.descripcion = descripcion.get()
+        noticia.titulo = titulo
+        noticia.descripcion = descripcion
+
         noticia.save()
 
-        self.actualizar_treeview(mitreeview)
-
-    def baja(self, mitreeview):
-        item_seleccionado = mitreeview.focus()
-        valor_id = mitreeview.item(item_seleccionado)
-        borrar = Noticia.get(Noticia.id == valor_id["text"])
+    def baja(self, delete_id):
+        borrar = Noticia.get(Noticia.id == delete_id)
         borrar.delete_instance()
-        self.actualizar_treeview(mitreeview)
 
-    def modificar(self, titulo, descripcion, mitreeview):
-        item_seleccionado = mitreeview.focus()
-        valor_id = mitreeview.item(item_seleccionado)
+    def modificar(self, update_id, titulo, descripcion):
         actualizar = Noticia.update(
-            titulo=titulo.get(), descripcion=descripcion.get()
-        ).where(Noticia.id == valor_id["text"])
-        actualizar.execute()
+            titulo=titulo, descripcion=descripcion
+        ).where(Noticia.id == update_id)
 
-        self.actualizar_treeview(mitreeview)
+        actualizar.execute()
