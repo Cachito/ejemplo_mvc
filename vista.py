@@ -7,9 +7,12 @@ from tkinter import Radiobutton
 from modelo import Modelo
 from tkinter import ttk
 from clases.tktemas import Temas
+from observer.observador import Observer
 
-
-class Ventanita:
+"""
+La clase Ventanita hereda de Observer, por eso capaz de observar algo.
+"""
+class Ventanita(Observer):
     def __init__(self, window):
         self.root = window
         self.root.title("Tarea Poo")
@@ -18,7 +21,13 @@ class Ventanita:
         self.var_descripcion = StringVar()
         self.opcion = StringVar()
 
+        """
+        La clase Modelo tiene acceso a un método agregar(), definido en la clase base Observable
+        que permite agrrgar observadores a una lista.
+        En este caso, Ventanita se agrega como observador self.modelo.agregar(self) -> self es Ventanita
+        """
         self.modelo = Modelo()
+        self.modelo.agregar(self)
 
         # Frame
         self.frame = Frame(self.root)
@@ -140,9 +149,15 @@ class Ventanita:
 
         if not titulo or not descripcion:
             print("Debe completar todos los datos.")
-        else:
-            self.modelo.alta(titulo, descripcion)
-            self.actualizar()
+            return
+
+        existe = self.modelo.get_by_titulo(titulo)
+        if existe:
+            print(f"Ya existe un registro con el título:{titulo}.")
+            return
+
+        self.modelo.alta(titulo, descripcion)
+        self.actualizar()
 
     def borrar(self):
         focus_item = self.tree.focus()
@@ -187,3 +202,18 @@ class Ventanita:
                     dato
                 ),
             )
+
+    """
+    Ventanita debe implementar un método update, que está definido en la clase base (Observer)
+    para sobrescritura (o delegación).
+    De esta manera:
+    - el Observable (Modelo) invoca este método de cada elemento de la lista.
+    - el Observer (Ventanita) le pide el estado a Modelo.
+    - Nótese que la ejecución de este método indica una actualziación de estado
+
+    Finalmente, Ventanita (Observer) hace lo que le venga en gana con el estado que obtiene
+    de Modelo (Observable)
+    """
+    def update(self):
+        self.estado = self.modelo.get_estado()
+        print("Estado = ", self.estado)
