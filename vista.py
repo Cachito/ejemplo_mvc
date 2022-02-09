@@ -166,9 +166,10 @@ class Ventanita(Observer):
 
         if not delete_id:
             print("Debe seleccionar un registro.")
-        else:
-            self.modelo.baja(delete_id)
-            self.actualizar()
+            return
+
+        self.modelo.baja(delete_id)
+        self.actualizar()
 
     def modificar(self):
         focus_item = self.tree.focus()
@@ -177,12 +178,22 @@ class Ventanita(Observer):
 
         if not update_id:
             print("Debe seleccionar un registro.")
-        else:
-            titulo = self.var_titulo.get()
-            descripcion = self.var_descripcion.get()
+            return
 
-            self.modelo.modificar(update_id, titulo, descripcion)
-            self.actualizar()
+        titulo = self.var_titulo.get()
+        descripcion = self.var_descripcion.get()
+
+        if not titulo or not descripcion:
+            print("Debe completar todos los datos.")
+            return
+
+        existe = self.modelo.get_other_by_titulo(update_id, titulo)
+        if existe:
+            print(f"Ya existe otro registro con el título:{titulo}.")
+            return
+
+        self.modelo.modificar(update_id, titulo, descripcion)
+        self.actualizar()
 
     def actualizar(self):
         records = self.tree.get_children()

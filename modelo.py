@@ -49,6 +49,10 @@ class Modelo(Observable):
         query = Noticia.select().where(Noticia.titulo == titulo)
         return query.exists()
 
+    def get_other_by_titulo(self, update_id, titulo):
+        query = Noticia.select().where((Noticia.titulo == titulo) & (Noticia.id != update_id))
+        return query.exists()
+
     def alta(self, titulo, descripcion):
         noticia = Noticia()
         noticia.titulo = titulo
